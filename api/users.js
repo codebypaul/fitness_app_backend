@@ -9,6 +9,7 @@ const JWT_SECRET = process.env.JWT_SECRET;
 
 // Models
 const db = require('../models');
+const User = require('../models/User');
 
 // GET api/users/test (Public)
 router.get('/test', (req, res) => {
@@ -32,7 +33,8 @@ router.post('/register', (req, res) => {
             console.log('else statement');
             const newUser = new User({
                 firstName: req.body.firstName,
-                laststName: req.body.lastName,
+                lastName: req.body.lastName,
+                DOB: req.body.dob,
                 email: req.body.email,
                 password: req.body.password
             });
@@ -59,7 +61,7 @@ router.post('/login', (req, res) => {
     const password = req.body.password;
 
     // Find a user via email
-    db.User.findOne({ email })
+    User.findOne({ email })
     .then(user => {
         // If there is not a user
         console.log(user);
