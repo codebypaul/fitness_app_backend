@@ -24,7 +24,7 @@ const UserSchema = new mongoose.Schema({
         type: String
     },
     DOB: {
-        type: Date
+        type: String
     },
     image: {
         type: String,
