@@ -5,11 +5,9 @@ const app = express();
 const cors = require('cors');
 const passport = require('passport');
 const session = require('express-session')
-// const MongoStore = require('connect-mongo')(session)
-const mongoose = require('mongoose')
 require('./config/passport')(passport);
 const PORT = process.env.PORT || 8000;
-require('./config/googlePassport')(passport)
+
 
 // API
 const users = require('./api/users');
@@ -23,7 +21,6 @@ app.use(express.json());
 app.use(passport.initialize());
 app.use(passport.session());
 
-require('./config/passport')(passport);
 
 // const sessionObject = {
 //     secret: process.env.SECRET_SESSION,
@@ -49,7 +46,6 @@ app.get('/', (req, res) => {
 
 // Routes
 app.use('/api/users', users);
-require('./api/googleUsers')(app)
 
 
 app.listen(PORT, () => {

@@ -19,24 +19,32 @@ router.get('/test', (req, res) => {
 // POST api/users/register (Public)
 router.post('/register', (req, res) => {
     console.log('inside of register')
-    // console.log(req.body);
-
+    const {googleId,displayName,firstName, lastName,dob, email, password,image} = req.body
     // console.log(db);
     db.User.findOne({ email: req.body.email })
     .then(user => {
         // if email already exits, send a 400 response
         console.log(user);
         if (user) {
+            if (googleId){
+                user.googleId = googleId
+                user.displayName = displayName
+                user.image = image
+                user.save()
+            }
             return res.status(400).json({ msg: 'Email already exists' });
         } else {
             // Create a new user
             console.log('else statement');
             const newUser = new User({
-                firstName: req.body.firstName,
-                lastName: req.body.lastName,
-                DOB: req.body.dob,
-                email: req.body.email,
-                password: req.body.password
+                googleId,
+                displayName,
+                firstName,
+                lastName,
+                DOB: dob,
+                email,
+                password,
+                image
             });
             // Salt and hash the password, then save the user
             bcrypt.genSalt(10, (err, salt) => {
@@ -72,6 +80,10 @@ router.post('/login', (req, res) => {
             res.status(400).json({ msg: 'User not found'});
         } else {
             if(password){
+                if (googleId){
+                    user.googleId = googleId
+                    user.save()
+                }
                 // A user is found in the database
                 bcrypt.compare(password, user.password)
                 .then(isMatch => {
@@ -104,7 +116,11 @@ router.post('/login', (req, res) => {
                     const payload = {
                         id: user.id,
                         email: user.email,
-                        name: user.name
+                        firstName: user.firstName,
+                        lastName: user.lastName,
+                        image: user.image,
+                        createdAt: user.createdAt
+
                     };
                     // Sign token
                     // 3600000 is one hour
@@ -136,9 +152,12 @@ router.post('/login', (req, res) => {
 // GET api/users/current (Private)
 router.get('/current', passport.authenticate('jwt', { session: false }), (req, res) => {
     res.json({
-        id: req.user.id,
-        name: req.user.name,
-        email: req.user.email
+        id: user.id,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        image: user.image,
+        createdAt: user.createdAt
     });
 });
 
