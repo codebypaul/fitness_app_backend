@@ -4,8 +4,12 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 const passport = require('passport');
+const session = require('express-session')
+// const MongoStore = require('connect-mongo')(session)
+const mongoose = require('mongoose')
 require('./config/passport')(passport);
 const PORT = process.env.PORT || 8000;
+require('./config/googlePassport')(passport)
 
 // API
 const users = require('./api/users');
@@ -17,7 +21,26 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 // Initialize Passport and use config file
 app.use(passport.initialize());
+app.use(passport.session());
+
 require('./config/passport')(passport);
+
+// const sessionObject = {
+//     secret: process.env.SECRET_SESSION,
+//     resave: false,
+//     saveUninitialized: false,
+//     store : new MongoStore({ mongooseConnection:mongoose.connection })
+// }
+//express session use session object
+// app.use(session(sessionObject));
+
+app.use((req, res, next) => {
+    // console.log(` res.locals : ${res.locals}`);
+    // Before every route, we will attach a user to res.local
+    // res.locals.alerts = req.flash();
+    res.locals.currentUser = req.user;
+    next();
+});
 
 // Home route
 app.get('/', (req, res) => {
@@ -26,7 +49,7 @@ app.get('/', (req, res) => {
 
 // Routes
 app.use('/api/users', users);
-// app.use('/api/books', books);
+require('./api/googleUsers')(app)
 
 
 app.listen(PORT, () => {

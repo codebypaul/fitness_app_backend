@@ -19,9 +19,9 @@ router.get('/test', (req, res) => {
 // POST api/users/register (Public)
 router.post('/register', (req, res) => {
     console.log('inside of register')
-    console.log(req.body);
+    // console.log(req.body);
 
-    console.log(db);
+    // console.log(db);
     db.User.findOne({ email: req.body.email })
     .then(user => {
         // if email already exits, send a 400 response
@@ -57,23 +57,48 @@ router.post('/register', (req, res) => {
 
 // POST api/users/login (Public)
 router.post('/login', (req, res) => {
+    console.log(req.body);
     const email = req.body.email;
     const password = req.body.password;
+    const googleId = req.body.googleId
 
     // Find a user via email
     User.findOne({ email })
     .then(user => {
         // If there is not a user
         console.log(user);
+
         if (!user) {
             res.status(400).json({ msg: 'User not found'});
         } else {
-            // A user is found in the database
-            bcrypt.compare(password, user.password)
-            .then(isMatch => {
-                // Check password for a match
-                if (isMatch) {
-                    console.log(isMatch);
+            if(password){
+                // A user is found in the database
+                bcrypt.compare(password, user.password)
+                .then(isMatch => {
+                    // Check password for a match
+                    if (isMatch) {
+                        console.log(isMatch);
+                        // User match, send a JSON Web Token
+                        // Create a token payload
+                        const payload = {
+                            id: user.id,
+                            email: user.email,
+                            name: user.name
+                        };
+                        // Sign token
+                        // 3600000 is one hour
+                        jwt.sign(payload, JWT_SECRET, { expiresIn: '1h' }, (error, token) => {
+                            res.json({
+                                success: true,
+                                token: `Bearer ${token}`
+                            });
+                        });
+                    } else {
+                        return res.status(400).json({ msg: 'Email or Password is incorrect' });
+                    }
+                })
+            }else{
+                if (googleId === user.googleId){
                     // User match, send a JSON Web Token
                     // Create a token payload
                     const payload = {
@@ -89,10 +114,21 @@ router.post('/login', (req, res) => {
                             token: `Bearer ${token}`
                         });
                     });
+
                 } else {
-                    return res.status(400).json({ msg: 'Email or Password is incorrect' });
+                        return res.status(400).json({ msg: 'Google ID not found' });
+
                 }
-            })
+                // .then(isMatch => {
+                //     // Check password for a match
+                //     if (isMatch) {
+                //         console.log(isMatch);
+                //     } else {
+                //     }
+                // })
+
+            }
+
         }
     })
 })

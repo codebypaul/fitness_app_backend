@@ -7,7 +7,6 @@ mongoose.connect(process.env.MONGO_URI, {
     useUnifiedTopology: true,
     useFindAndModify: true
 });
-console.log(process.env);
 // Mongoose connection object
 const db = mongoose.connection;
 
