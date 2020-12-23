@@ -95,7 +95,10 @@ router.post('/login', (req, res) => {
                         const payload = {
                             id: user.id,
                             email: user.email,
-                            name: user.name
+                            firstName: user.firstName,
+                            lastName: user.lastName,
+                            image: user.image,
+                            createdAt: user.createdAt
                         };
                         // Sign token
                         // 3600000 is one hour
