@@ -46,7 +46,8 @@ app.get('/', (req, res) => {
 
 // Routes
 app.use('/api/users', users);
-
+app.use('/api/foods',require('./api/food'))
+app.use('/api/workouts',require('./api/workout'))
 
 app.listen(PORT, () => {
     console.log(`Server is listening 🎧 on port: ${PORT}`);
