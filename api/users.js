@@ -10,7 +10,8 @@ const JWT_SECRET = process.env.JWT_SECRET;
 // Models
 const db = require('../models');
 const User = require('../models/User');
-
+const Food = require('../models/Food')
+const Workout = require('../models/Workout')
 // GET api/users/test (Public)
 router.get('/test', (req, res) => {
     res.json({ msg: 'User endpoint OK!'});
@@ -122,8 +123,9 @@ router.post('/login', (req, res) => {
                         firstName: user.firstName,
                         lastName: user.lastName,
                         image: user.image,
-                        createdAt: user.createdAt
-
+                        createdAt: user.createdAt,
+                        favoriteFoods: user.favoriteFoods,
+                        favoriteWorkouts: user.favoriteWorkouts
                     };
                     // Sign token
                     // 3600000 is one hour
@@ -160,8 +162,27 @@ router.get('/current', passport.authenticate('jwt', { session: false }), (req, r
         firstName: user.firstName,
         lastName: user.lastName,
         image: user.image,
-        createdAt: user.createdAt
+        createdAt: user.createdAt,
+        favoriteFoods:user.favoriteFoods,
+        favoriteWorkouts: user.favoriteWorkouts
     });
 });
+
+router.post('/newfaves',async (req,res)=>{
+    console.log(req.body);
+    try{
+        const user = await User.findOne({_id:req.body.user_id})
+        if (user){
+            if (req.body.food) user.favoriteFoods.push(req.body.food)
+            if (req.body.workout) user.favoriteWorkouts.push(req.body.workout)
+            user.save()
+            res.status(200)
+        } else {
+            res.status(404).json('this is not the code you\'re looking for')
+        }
+    }catch(err){
+
+    }
+})
 
 module.exports = router;

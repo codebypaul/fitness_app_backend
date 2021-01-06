@@ -37,6 +37,14 @@ const UserSchema = new mongoose.Schema({
         type: Date,
         default: Date.now()
     },
+    favoriteFoods: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref :'Food'
+    }],
+    favoriteWorkouts: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref :'Workout'
+    }]
 
 })
 
