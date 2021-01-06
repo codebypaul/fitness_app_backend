@@ -123,9 +123,7 @@ router.post('/login', (req, res) => {
                         firstName: user.firstName,
                         lastName: user.lastName,
                         image: user.image,
-                        createdAt: user.createdAt,
-                        favoriteFoods: user.favoriteFoods,
-                        favoriteWorkouts: user.favoriteWorkouts
+                        createdAt: user.createdAt
                     };
                     // Sign token
                     // 3600000 is one hour
