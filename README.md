@@ -39,17 +39,17 @@ const workoutSchema = new mongoose.Schema({
 
 module.exports = mongoose.model('workout', workoutSchema);
 ```
-#### oh no what went wrong
+### oh no what went wrong
 
 In the early stages of this project we were builing out the api in a seperate project `https://github.com/fmuwanguzi/fitness-api` and pulling from it's deployed link `https://general-fit.herokuapp.com/`.
 
 While it was working fine they're was a merging issue and it had to be scraped due to a time constraint at this time it is working.
 
-#### the fix
+### the fix
 
 Routes were adjusted to work directly from our back end repo/project.
 
-#### adding food 
+## adding food 
 
 Using an online website `https://www.eatyourselfskinny.com` to get information for food. This was done using request and cheerio. As well as carefully inspecting the pages for neccessary information. 
 
