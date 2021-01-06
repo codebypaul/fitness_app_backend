@@ -6,7 +6,7 @@ link to client side repo `https://github.com/codebypaul/fitness_app_client`
 
 ## our models for workouts and nutrition
 
-#### food model
+#### food schema
 
 ```js
 const mongoose = require('mongoose')
@@ -23,7 +23,7 @@ const foodSchema = new mongoose.Schema({
 module.exports = mongoose.model('Food',foodSchema)
 ```
 
-#### workout model
+#### workout schema
 
 ```js
 const mongoose = require('mongoose');
@@ -106,7 +106,7 @@ router.post('/', async (req,res)=>{
 
 ```
 
-## Workout route
+## Add Workouts
 
 Adding to the api for workouts was done using the route below and using postman.
 
